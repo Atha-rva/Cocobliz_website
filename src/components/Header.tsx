@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, Leaf } from 'lucide-react';
+import { Menu, X, Leaf, Zap } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { Link, useRouter } from './Router';
 
@@ -29,20 +29,43 @@ export function Header() {
     >
       <div className="container-coco">
         <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <span
-              className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors duration-300 ${
-                scrolled ? 'bg-coco-green' : 'bg-coco-green'
-              }`}
-            >
-              <Leaf className="h-5 w-5 text-coco-cream" />
+          <Link to="/" className="logo-link group">
+            <span className="logo-mark" aria-hidden="true">
+              <svg viewBox="0 0 120 120" className="logo-mark__svg">
+                <defs>
+                  <linearGradient id="badgeRing" x1="0%" x2="100%" y1="0%" y2="100%">
+                    <stop offset="0%" stopColor="#f7e55c" />
+                    <stop offset="50%" stopColor="#f6c945" />
+                    <stop offset="100%" stopColor="#d7f938" />
+                  </linearGradient>
+                  <linearGradient id="badgeCore" x1="0%" x2="100%" y1="0%" y2="100%">
+                    <stop offset="0%" stopColor="#2aa34d" />
+                    <stop offset="100%" stopColor="#0d5a3d" />
+                  </linearGradient>
+                </defs>
+                <circle cx="60" cy="60" r="52" fill="url(#badgeRing)" opacity="0.98" />
+                <circle cx="60" cy="60" r="41" fill="#f3f0df" />
+                <path d="M49 36c-7 11-10 24-8 38 2 15 12 27 26 30 18 3 33-3 42-20 9-18 2-38-16-48-10-7-29-4-44 0Z" fill="url(#badgeCore)" />
+                <path d="M54 59c-9 0-18 7-19 18 9 9 23 11 34 4 8-5 14-15 15-23-9-2-20-3-30 1Z" fill="#f4f0dc" opacity="0.8" />
+                <path d="M33 48c11-6 14-14 15-23 4 10 14 18 28 19-12 2-22 11-29 22-6-5-11-11-14-18Z" fill="#2e8b57"/>
+                <path d="M65 31c8 10 9 22 6 35-9-4-18-4-25-2 1-12 8-24 19-33Z" fill="#5abf5a" opacity="0.85" />
+                <path d="M82 72c-8 7-16 9-26 8 10 14 29 18 43 11-4-9-10-16-17-19Z" fill="#3ca56a" opacity="0.8" />
+                <path d="M56 41 68 22l8 20-11 12-5-10-9 11-9-15 10-10Z" fill="#f5d542" opacity="0.95" />
+                <path d="M59 50 41 58 58 66 64 84 72 66 90 58 72 50 64 34 59 50Z" fill="#f5d542" />
+                <path d="M66 36h8v17h-8z" fill="#f9efbb" opacity="0.8" />
+                <path d="M46 59c8 5 18 6 28 4" stroke="#e7f9e1" strokeWidth="4" strokeLinecap="round" opacity="0.7" />
+                <circle cx="49" cy="45" r="3" fill="#dfe9ff" opacity="0.85" />
+                <circle cx="78" cy="42" r="3" fill="#dfe9ff" opacity="0.85" />
+                <circle cx="85" cy="77" r="3" fill="#dfe9ff" opacity="0.85" />
+                <circle cx="41" cy="82" r="3" fill="#dfe9ff" opacity="0.85" />
+                <path d="M52 52 66 32" stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity="0.7" />
+              </svg>
+              <span className="logo-mark__glow">
+                <Zap className="h-4 w-4 text-amber-100" fill="currentColor" />
+              </span>
             </span>
-            <span
-              className={`font-display text-xl font-extrabold tracking-tight transition-colors duration-300 ${
-                scrolled ? 'text-coco-green' : 'text-coco-green'
-              }`}
-            >
-              CocoBlitz
+            <span className="logo-wordmark" aria-label="CocoBlitz">
+              <span className="logo-wordmark__text">CocoBlitz</span>
             </span>
           </Link>
 

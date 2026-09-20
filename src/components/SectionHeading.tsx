@@ -25,11 +25,11 @@ export function SectionHeading({
             align === 'center' ? 'justify-center' : ''
           }`}
         >
-          <span className="h-px w-8 bg-accent-gold" />
-          <span className="text-xs font-bold uppercase tracking-widest text-accent-gold">
+          <span className="h-px w-8 bg-coco-green/30" />
+          <span className="text-xs font-bold uppercase tracking-widest text-coco-green/70">
             {eyebrow}
           </span>
-          {align === 'center' && <span className="h-px w-8 bg-accent-gold" />}
+          {align === 'center' && <span className="h-px w-8 bg-coco-green/30" />}
         </div>
       )}
       <h2

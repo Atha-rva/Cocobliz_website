@@ -1,42 +1,191 @@
-import { Target, Eye, Heart, Leaf, ShieldCheck, Globe2, Users, Sprout } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowLeft, ArrowRight, Target, Eye, Heart, Leaf, ShieldCheck, Globe2, Users, Sprout } from 'lucide-react';
 import { SectionHeading } from '@/components/SectionHeading';
 import { Reveal } from '@/components/Reveal';
 import { MagneticButton } from '@/components/MagneticButton';
+import aboutHeroImage from '../../assets/ChatGPT Image Sep 18, 2026, 01_51_35 PM.png';
+import farmImageOne from '../../assets/ChatGPT Image Sep 18, 2026, 01_50_44 PM.png';
+import farmImageTwo from '../../assets/ChatGPT Image Sep 18, 2026, 01_50_56 PM.png';
+import farmImageThree from '../../assets/ChatGPT Image Sep 18, 2026, 01_51_17 PM.png';
+import farmImageFour from '../../assets/ChatGPT Image Sep 18, 2026, 01_51_27 PM.png';
+
+const storySlides = [
+  {
+    id: 1,
+    title: 'Where It Begins',
+    description: 'Carefully selected coconuts from thriving tropical farms.',
+    image: aboutHeroImage,
+    alt: 'Fresh coconut water being poured from a ripe coconut in a tropical paradise',
+  },
+  {
+    id: 2,
+    title: 'Fresh From the Farm',
+    description: 'Freshness starts with responsible sourcing.',
+    image: farmImageOne,
+    alt: 'Coconut palms growing in a sunny tropical plantation',
+  },
+  {
+    id: 3,
+    title: 'Crafted With Care',
+    description: 'Every step is guided by quality and consistency.',
+    image: farmImageTwo,
+    alt: 'Fresh coconuts and coconut water prepared naturally in a tropical setting',
+  },
+  {
+    id: 4,
+    title: 'Pure Coconut Goodness',
+    description: 'Natural coconut goodness, carefully crafted.',
+    image: farmImageThree,
+    alt: 'Fresh green coconuts shown in a scenic tropical plantation',
+  },
+  {
+    id: 5,
+    title: 'From Our Farms to the World',
+    description: 'Bringing quality coconut products to customers everywhere.',
+    image: farmImageFour,
+    alt: 'Farmer harvesting coconuts at golden hour in a beautiful island landscape',
+  },
+];
 
 export function About() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+
+  const nextSlide = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % storySlides.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + storySlides.length) % storySlides.length);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = window.setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % storySlides.length);
+    }, 4000);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight') nextSlide();
+      if (event.key === 'ArrowLeft') prevSlide();
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [nextSlide, prevSlide]);
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = event.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX.current === null) return;
+
+    const distance = touchStartX.current - event.changedTouches[0].clientX;
+    if (Math.abs(distance) > 50) {
+      if (distance > 0) nextSlide();
+      else prevSlide();
+    }
+
+    touchStartX.current = null;
+  };
+
+  const currentSlide = storySlides[activeIndex];
+
   return (
     <>
-      {/* Hero */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-20 bg-gradient-to-br from-coco-cream to-coco-sandlight/30">
-        <div className="container-coco text-center max-w-3xl mx-auto">
-          <div className="mb-6 flex items-center justify-center gap-2.5 animate-fade-in-up">
-            <span className="h-px w-8 bg-accent-gold" />
-            <span className="text-xs font-bold uppercase tracking-widest text-accent-gold">
-              About CocoBlitz
-            </span>
-            <span className="h-px w-8 bg-accent-gold" />
+      <section className="about-hero-carousel-wrapper">
+        <div
+          className="about-hero-carousel"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="about-hero-carousel__slides" aria-live="polite">
+            {storySlides.map((slide, index) => (
+              <div
+                key={slide.id}
+                className={`about-hero-carousel__slide ${index === activeIndex ? 'is-active' : ''}`}
+                aria-hidden={index !== activeIndex}
+              >
+                <img src={slide.image} alt={slide.alt} className="about-hero-carousel__image" loading={index === 0 ? 'eager' : 'lazy'} />
+                <div className="about-hero-carousel__overlay" />
+              </div>
+            ))}
           </div>
-          <h1 className="text-display font-extrabold text-coco-green animate-fade-in-up animate-delay-100">
-            From a single coconut
-            <br />
-            to a global standard.
-          </h1>
-          <p className="mt-7 text-lg md:text-xl text-coco-dark/60 leading-relaxed animate-fade-in-up animate-delay-200">
-            What began as a passion for the humble coconut has grown into a trusted name in premium coconut products — serving customers across the world with an unwavering commitment to quality, sustainability, and community.
-          </p>
+
+          <div className="container-coco about-hero-carousel__content-wrap">
+            <div className="about-hero-carousel__content">
+              <div className="mb-6 flex items-center justify-center gap-2.5 animate-fade-in-up md:justify-start">
+                <span className="h-px w-8 bg-accent-gold" />
+                <span className="text-xs font-bold uppercase tracking-widest text-accent-gold">
+                  About CocoBlitz
+                </span>
+                <span className="h-px w-8 bg-accent-gold" />
+              </div>
+
+              <h1 className="about-hero-carousel__title animate-fade-in-up animate-delay-100">
+                From a single coconut
+                <br />
+                to a global standard.
+              </h1>
+
+              <p className="about-hero-carousel__description animate-fade-in-up animate-delay-200">
+                What began as a passion for the humble coconut has grown into a trusted name in premium coconut products — serving customers across the world with an unwavering commitment to quality, sustainability, and community.
+              </p>
+
+              <div className="about-hero-carousel__controls">
+                <button
+                  type="button"
+                  className="about-hero-carousel__nav about-hero-carousel__nav--prev"
+                  onClick={prevSlide}
+                  aria-label="Previous slide"
+                >
+                  <ArrowLeft size={18} />
+                </button>
+                <button
+                  type="button"
+                  className="about-hero-carousel__nav about-hero-carousel__nav--next"
+                  onClick={nextSlide}
+                  aria-label="Next slide"
+                >
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+
+              <div className="about-hero-carousel__progress" role="tablist" aria-label="Carousel progress">
+                {storySlides.map((slide, index) => (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    className={`about-hero-carousel__indicator ${index === activeIndex ? 'is-active' : ''}`}
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`View slide ${index + 1}: ${slide.title}`}
+                    aria-current={index === activeIndex}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Story Section */}
-      <section className="section-padding bg-white">
+      <section className="bg-white pb-12 pt-4 md:pb-16 md:pt-6">
         <div className="container-coco">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <Reveal direction="scale">
               <div className="relative">
                 <div className="rounded-[2rem] overflow-hidden shadow-xl shadow-coco-green/10 aspect-[4/3] group">
                   <img
-                    src="https://images.pexels.com/photos/5608055/pexels-photo-5608055.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
-                    alt="Coconut grove"
+                    src={farmImageOne}
+                    alt="Fresh green coconuts growing in a tropical plantation"
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
